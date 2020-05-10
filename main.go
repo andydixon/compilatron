@@ -17,10 +17,19 @@ func main() {
 	structure := make(map[string]string)
 	pathRewrites := make(map[string]string)
 	basedir := "site"
-	if args[0] != "" {
+	/**
+	@fixme need to change this into a proper options based thing
+	*/
+	if len(args) > 0 {
 		basedir = args[0]
 	}
+	if _, err := os.Stat(basedir + "/index.htm"); os.IsNotExist(err) {
+		if _, err := os.Stat(basedir + "/index.html"); os.IsNotExist(err) {
+			os.Stderr.WriteString("No index.htm or index.html file found")
+			os.Exit(1)
 
+		}
+	}
 	separator := fmt.Sprintf("%c", os.PathSeparator)
 	err := filepath.Walk(basedir,
 		func(path string, info os.FileInfo, err error) error {
