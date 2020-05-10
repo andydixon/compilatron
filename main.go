@@ -99,10 +99,10 @@ func main() {
 		//	handleFunc["DEFAULT"] = `http.HandleFunc("/", ` + uniqueid + `)`
 		//}
 		if strings.HasSuffix(pathRewrites[k], "index.htm") {
-			handleFunc["DEFAULT"+pathRewrites[k]] = `http.HandleFunc("` + strings.Replace(pathRewrites[k], "index.htm", "", 1) + `", ` + uniqueid + `)`
+			handleFunc["DEFAULT"+pathRewrites[k]] = `http.HandleFunc("/` + strings.Replace(pathRewrites[k], "index.htm", "", 1) + `", ` + uniqueid + `)`
 		}
 		if strings.HasSuffix(pathRewrites[k], "index.html") {
-			handleFunc["DEFAULT"+pathRewrites[k]] = `http.HandleFunc("` + strings.Replace(pathRewrites[k], "index.html", "", 1) + `", ` + uniqueid + `)`
+			handleFunc["DEFAULT"+pathRewrites[k]] = `http.HandleFunc("/` + strings.Replace(pathRewrites[k], "index.html", "", 1) + `", ` + uniqueid + `)`
 		}
 
 	}
