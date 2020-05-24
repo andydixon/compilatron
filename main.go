@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/md5"
 	"encoding/base64"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -13,20 +14,32 @@ import (
 )
 
 func main() {
-	args := os.Args[1:]
 	structure := make(map[string]string)
 	pathRewrites := make(map[string]string)
-	basedir := "site"
-	/**
-	@fixme need to change this into a proper options based thing
-	*/
-	if len(args) > 0 {
-		basedir = args[0]
+	var namespace = ""
+	var outFile = ""
+	var basedir = ""
+	required := []string{"o", "src"}
+
+	flag.StringVar(&outFile, "o", "", "Name of the output file containing the code (required)")
+	flag.StringVar(&basedir, "src", "", "Location of the webpages to compile (required)")
+	flag.StringVar(&namespace, "pkg", "main", "Package name to generate the code under (Defaults to main)")
+	flag.Parse()
+
+	seen := make(map[string]bool)
+	flag.Visit(func(f *flag.Flag) { seen[f.Name] = true })
+	for _, req := range required {
+		if !seen[req] {
+			// or possibly use `log.Fatalf` instead of:
+			fmt.Fprintf(os.Stderr, "missing required -%s - refer to "+os.Args[0]+" --help for more information\n", req)
+			os.Exit(1) // the same exit code flag.Parse uses
+		}
 	}
+
 	if _, err := os.Stat(basedir + "/index.htm"); os.IsNotExist(err) {
 		if _, err := os.Stat(basedir + "/index.html"); os.IsNotExist(err) {
 			os.Stderr.WriteString("No index.htm or index.html file found")
-			os.Exit(1)
+			os.Exit(2)
 
 		}
 	}
@@ -72,8 +85,8 @@ func main() {
 	Start working through the files and compile them into a package
 	*/
 
-	f, err := os.Create("webserver_main.go")
-	f.WriteString(`package main
+	f, err := os.Create(outFile)
+	f.WriteString(`package ` + namespace + `
 		import (
 	"encoding/base64"
 	"fmt"
