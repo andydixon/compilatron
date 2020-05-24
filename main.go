@@ -101,15 +101,13 @@ func main() {
 		uniqueid := "x" + fmt.Sprintf("%x", md5.Sum([]byte(k)))
 		f.WriteString(`func ` + uniqueid + `(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "` + v + `")
+	w.Header().Set("Server", "dxn.pw compilatron")
 	sDec, _ := base64.StdEncoding.DecodeString("` + base64.StdEncoding.EncodeToString(fileContents) + `")
 	fmt.Fprint(w, string(sDec))
 }
 
 `)
 		handleFunc[pathRewrites[k]] = `http.HandleFunc("/` + pathRewrites[k] + `", ` + uniqueid + `)`
-		//if pathRewrites[k] == "index.htm" || pathRewrites[k] == "index.html" {
-		//	handleFunc["DEFAULT"] = `http.HandleFunc("/", ` + uniqueid + `)`
-		//}
 		if strings.HasSuffix(pathRewrites[k], "index.htm") {
 			handleFunc["DEFAULT"+pathRewrites[k]] = `http.HandleFunc("/` + strings.Replace(pathRewrites[k], "index.htm", "", 1) + `", ` + uniqueid + `)`
 		}
