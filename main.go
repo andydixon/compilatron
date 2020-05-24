@@ -79,7 +79,6 @@ func main() {
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 )
 `)
 	handleFunc := make(map[string]string) // key is full path, value is uniqueid
