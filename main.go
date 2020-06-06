@@ -66,7 +66,7 @@ func main() {
 						contentType = strings.Replace(contentType, "text/plain", "text/css", 1)
 					case ".svg":
 					case ".svgz":
-						contentType = strings.Replace(contentType, "text/plain", "image/svg+xml", 1)
+						contentType = strings.Replace(contentType, "text/xml; charset=utf-8", "image/svg+xml", 1)
 					}
 					/**
 					Sort this out - the path stuff needs to be cleaned up a lot more, especially cleaning up the stuff, etc.
